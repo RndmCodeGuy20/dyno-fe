@@ -12,7 +12,7 @@ export function CreateDNSRecordDialog({ open, onOpenChange }: {
     const [subdomain, setSubdomain] = useState("")
     const [ipv4, setIpv4] = useState("")
     const [ipv6, setIpv6] = useState("")
-    const { createRecord, isCreateLoading, isCreateError, createError } = useDnsRecordContext();
+    const { createRecord, isCreateLoading } = useDnsRecordContext();
 
     const handleCreate = async () => {
         if (!subdomain.trim()) return
