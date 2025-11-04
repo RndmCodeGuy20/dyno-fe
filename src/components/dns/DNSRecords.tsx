@@ -22,16 +22,7 @@ import { toast } from "sonner"
 import { Copy, Pencil, Check, MoreHorizontal, X } from "lucide-react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useDnsRecordContext } from "@/hooks/useDns"
-
-interface DnsRecord {
-    id: string
-    userId: string
-    domainName: string
-    currentIPV4: string
-    currentIPV6: string
-    createdAt: string
-    updatedAt: string
-}
+import type { DnsRecord } from "@/types/dns"
 
 
 
@@ -61,7 +52,8 @@ const DNSRecords: React.FC = () => {
 
     const columns: ColumnDef<DnsRecord>[] = [
         {
-            accessorKey: "domainName",
+            accessorFn: (row) => row.domainName,
+            id: "domainName",
             header: "Domain Name",
             cell: ({ row }) => (
                 <div className="group flex items-center gap-2">
@@ -80,7 +72,8 @@ const DNSRecords: React.FC = () => {
             ),
         },
         {
-            accessorKey: "currentIPV4",
+            accessorFn: (row) => row.currentIPV4,
+            id: "currentIPV4",
             header: "IPv4",
             cell: ({ row }) => {
                 const isEditing =
@@ -140,7 +133,8 @@ const DNSRecords: React.FC = () => {
             },
         },
         {
-            accessorKey: "currentIPV6",
+            accessorFn: (row) => row.currentIPV6,
+            id: "currentIPV6",
             header: "IPv6",
             cell: ({ row }) => {
                 const isEditing =
@@ -199,20 +193,22 @@ const DNSRecords: React.FC = () => {
             },
         },
         {
-            accessorKey: "createdAt",
+            accessorFn: (row) => row.createdAt,
+            id: "createdAt",
             header: "Created At",
             cell: ({ getValue }) => {
-                const date = new Date(getValue<string>())
+                const date = getValue<Date>() instanceof Date ? getValue<Date>() : new Date(getValue<string>())
                 return `${String(date.getDate()).padStart(2, "0")}/${String(
                     date.getMonth() + 1
                 ).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`
             },
         },
         {
-            accessorKey: "updatedAt",
+            accessorFn: (row) => row.updatedAt,
+            id: "updatedAt",
             header: "Updated At",
             cell: ({ getValue }) => {
-                const date = new Date(getValue<string>())
+                const date = getValue<Date>() instanceof Date ? getValue<Date>() : new Date(getValue<string>())
                 return `${String(date.getDate()).padStart(2, "0")}/${String(
                     date.getMonth() + 1
                 ).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`
@@ -221,6 +217,8 @@ const DNSRecords: React.FC = () => {
         {
             id: "actions",
             header: "",
+            accessorFn: (row) => row.id,
+            accessorKey: "actions",
             cell: ({ row }) => {
                 const record = row.original
 

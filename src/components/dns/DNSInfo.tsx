@@ -16,7 +16,7 @@ const DomainInfoPanel: React.FC<DomainInfoPanelProps> = ({
 
     function getValue(key: string): string {
         if (isLoading) return "-";
-        if (isError) return "something went wrong";
+        if (isError) return "oops...";
         else return data?.[key as keyof typeof data] || "-";
     }
 
