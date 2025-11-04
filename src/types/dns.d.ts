@@ -4,6 +4,6 @@ export interface DnsRecord {
     domainName: string;
     currentIPV4: string;
     currentIPV6: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | string;
+    updatedAt: Date | string;
 }
