@@ -1,4 +1,6 @@
 import { PlusIcon } from "lucide-react";
+import dynoLogo from "@/assets/images/dyno logo.png";
+import BadgeStatus from "./status_badge";
 
 
 const NavBar = ({ setCreateDialogOpen }: { setCreateDialogOpen: (open: boolean) => void }) => {
@@ -9,7 +11,7 @@ const NavBar = ({ setCreateDialogOpen }: { setCreateDialogOpen: (open: boolean) 
         >
             <div className="flex-1">
                 <img
-                    src="/src/assets/images/dyno logo.png"
+                    src={dynoLogo}
                     alt="Dyno Logo"
                     className="h-8 w-auto"
                 />
@@ -22,6 +24,7 @@ const NavBar = ({ setCreateDialogOpen }: { setCreateDialogOpen: (open: boolean) 
                                     className="ml-2 text-zinc-500 placeholder-zinc-400 focus:outline-none"
                                 />
                             </div> */}
+            <BadgeStatus />
             <div
                 onClick={() => setCreateDialogOpen(true)}
                 className="relative inline-flex items-center justify-center px-4 py-2 text-sm font-medium 

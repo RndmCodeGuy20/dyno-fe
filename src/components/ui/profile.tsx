@@ -5,7 +5,6 @@ import { toast } from "sonner";
 
 
 const Profile: React.FC = () => {
-    const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(false);
     const { user, token } = useAuth();
 
     return (

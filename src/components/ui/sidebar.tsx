@@ -1,5 +1,3 @@
-
-import avatarImage from "@/assets/images/avatar.png";
 import downChevronIcon from "@/assets/icons/down_chevron.svg";
 import DnsIcon from "@/components/icons/DnsIcon";
 import PortForwardingIcon from "@/components/icons/PortForwardingIcon";
@@ -8,9 +6,11 @@ import SupportIcon from "@/components/icons/SupportIcon";
 import React from "react";
 import { useDnsRecordContext } from "@/hooks/useDns";
 import { useAuth } from "@/hooks/useAuth";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import Avatar from "boring-avatars";
+
 export default function Sidebar() {
-    const { records, isFetchLoading, isFetchError } = useDnsRecordContext();
+    const { records, } = useDnsRecordContext();
     const { user, logout } = useAuth();
     const navItems = React.useMemo(() => [
         { name: "DNS Records", href: "dashboard", current: true, count: records?.length, icon: DnsIcon },
@@ -35,11 +35,12 @@ export default function Sidebar() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="flex items-center cursor-pointer  w-full">
-                            <img
+                            {/* <img
                                 src={avatarImage}
                                 alt="User Avatar"
                                 className="h-8 w-auto rounded-sm"
-                            />
+                            /> */}
+                            <Avatar name={user?.username} className="h-8 w-auto rounded-sm" square variant="marble" />
                             <span className="ml-2 text-md font-medium text-zinc-950">{user?.username}</span>
                             <img src={downChevronIcon} alt="dropdown" className="ml-1 h-4 w-4 brightness-0" />
                         </div>
