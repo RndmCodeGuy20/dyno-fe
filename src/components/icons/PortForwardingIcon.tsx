@@ -1,0 +1,15 @@
+import React from 'react';
+
+interface port_forwardingProps extends React.SVGProps<SVGSVGElement> {
+  stroke?: string;
+  height?: number | string;
+  width?: number | string;
+}
+
+const port_forwarding = (props: port_forwardingProps) => (
+  <svg width={props.width || "24"} height={props.height || "24"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="9.25" r="1.5" stroke={props.stroke || "black"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M7.75 21.25L11.75 9.25H12.25L16.25 21.25" stroke={props.stroke || "black"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M9.5 17.75H14.5" stroke={props.stroke || "black"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M7.75693 12.7501C6.08102 10.7234 6.08103 7.77679 7.75693 5.75M16.2431 5.75C17.919 7.77679 17.919 10.7234 16.2431 12.7501" stroke={props.stroke || "black"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M5.06494 2.7574C1.64285 6.40823 1.64502 12.1018 5.07145 15.75M18.9281 2.75C22.3572 6.40053 22.3573 12.0993 18.9285 15.75" stroke={props.stroke || "black"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+);
+
+export default port_forwarding;
