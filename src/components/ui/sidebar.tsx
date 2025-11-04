@@ -19,8 +19,8 @@ export default function Sidebar() {
 
 
     const helpItems = [
-        { name: "Documentation", href: "#", current: false, icon: DocsIcon },
-        { name: "Support", href: "#", current: false, icon: SupportIcon },
+        { name: "Documentation", href: "https://github.com/RndmCodeGuy20/dyno-fe", current: false, icon: DocsIcon },
+        { name: "Support", href: "https://github.com/RndmCodeGuy20/dyno-fe/issues/new", current: false, icon: SupportIcon },
     ];
 
     const handleLogout = () => {
