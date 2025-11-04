@@ -1,0 +1,320 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image-digest: ${{ steps.build-and-push.outputs.digest }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up QEMU (for cross-platform builds if needed)
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Docker registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Extract version from package.json
+        id: get_version
+        run: |
+          VERSION=$(grep '^version' package.json | cut -d '"' -f4)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Define image tags
+        id: vars
+        run: |
+          SHORT_SHA=${GITHUB_SHA::7}
+          VERSION=${{ steps.get_version.outputs.version }}
+          echo "sha_tag=${VERSION}-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "semver_tag=${VERSION}" >> $GITHUB_OUTPUT
+          echo "sha_only=${SHORT_SHA}" >> $GITHUB_OUTPUT
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            ENV_TAG=production
+          else
+            ENV_TAG=staging
+          fi
+          echo "env_tag=${ENV_TAG}" >> $GITHUB_OUTPUT
+          echo "build_timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+      - name: Set lowercase repository name
+        id: repo
+        run: echo "repository=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+      - name: Extract build info
+        id: build_info
+        run: |
+          echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "commit_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "commit_ref=${GITHUB_REF}" >> $GITHUB_OUTPUT
+          echo "commit_branch=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          echo "build_user=${GITHUB_ACTOR}" >> $GITHUB_OUTPUT
+          echo "build_repo=${GITHUB_REPOSITORY}" >> $GITHUB_OUTPUT
+          echo "build_run_id=${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
+          echo "build_run_number=${GITHUB_RUN_NUMBER}" >> $GITHUB_OUTPUT
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          build-args: |
+            ENV=${{ steps.vars.outputs.env_tag }}
+            COMMIT_HASH=${{ steps.build_info.outputs.commit_sha }}
+            VERSION=${{ steps.get_version.outputs.version }}
+            BUILD_TIME=${{ steps.vars.outputs.build_timestamp }}
+          tags: |
+            ghcr.io/${{ steps.repo.outputs.repository }}:${{ steps.vars.outputs.semver_tag }}
+            ghcr.io/${{ steps.repo.outputs.repository }}:${{ steps.vars.outputs.sha_tag }}
+            ghcr.io/${{ steps.repo.outputs.repository }}:${{ steps.vars.outputs.sha_only }}
+            ghcr.io/${{ steps.repo.outputs.repository }}:${{ steps.vars.outputs.env_tag }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.vars.outputs.semver_tag }}
+      - name: Save image digest as artifact
+        run: |
+          echo "${{ steps.vars.outputs.sha_tag }}" > image_tag.txt
+          echo "${{ steps.vars.outputs.semver_tag }}" >> image_tag.txt
+          echo "${{ steps.vars.outputs.sha_only }}" >> image_tag.txt
+          echo "${{ steps.vars.outputs.env_tag }}" >> image_tag.txt
+        continue-on-error: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-tags
+          path: image_tag.txt
+  
+  notify-success:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Download image tags
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image-tags
+      - name: Read image tags
+        id: read-tags
+        run: |
+          TAGS=$(cat image_tag.txt | sed 's/^/• `/' | sed 's/$/`/' | tr '\n' ' ')
+          echo "formatted-tags=${TAGS}" >> $GITHUB_OUTPUT
+      - name: Send Slack notification - Success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚀 Deployment Successful",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn", 
+                      "text": "*Commit:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered by:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🐳 Container Image Details*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Image Digest:*\n`${{ needs.build-and-push.outputs.image-digest }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Tags:*\n${{ steps.read-tags.outputs.formatted-tags }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📦 Package URL:*\n<https://github.com/users/${{ github.actor }}/packages/container/package/${{ github.event.repository.name }}|View Package Registry>"
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Open Package",
+                      "emoji": true
+                    },
+                    "url": "https://github.com/users/${{ github.actor }}/packages/container/package/${{ github.event.repository.name }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*⏱️ Duration:*\n${{ github.event.head_commit.timestamp }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*🔄 Run ID:*\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Workflow Run",
+                        "emoji": true
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "style": "primary"
+                    },
+                    {
+                      "type": "button", 
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Commit",
+                        "emoji": true
+                      },
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "✅ Build completed successfully at ${{ github.event.head_commit.timestamp }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          
+  notify-failure:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send Slack notification - Failure
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ Deployment Failed",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n<https://github.com/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n`${{ github.ref_name }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered by:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠️ *Build failed during the CI/CD pipeline*"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Failed Run",
+                        "emoji": true
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "style": "danger"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text", 
+                        "text": "View Logs",
+                        "emoji": true
+                      },
+                      "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "🔴 Build failed at ${{ github.event.head_commit.timestamp }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
