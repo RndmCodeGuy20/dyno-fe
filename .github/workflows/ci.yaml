@@ -27,7 +27,7 @@ jobs:
       - name: Extract version from package.json
         id: get_version
         run: |
-          VERSION=$(grep '^version' package.json | cut -d '"' -f4)
+          VERSION=$(grep "version" package.json | cut -d '"' -f4)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Define image tags
         id: vars
