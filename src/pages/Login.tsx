@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
+import dynoLogo from "@/assets/images/dyno logo.png";
+
 const LoginPage = () => {
     const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
@@ -14,6 +16,11 @@ const LoginPage = () => {
     const { login, isLoading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) {
+        navigate("/dashboard");
+    }
 
     const from = location.state?.from?.pathname || "/dashboard";
 
@@ -38,7 +45,7 @@ const LoginPage = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-50 relative">
             <div className="logo absolute top-8 left-8 text-center flex gap-2 items-center justify-center ">
                 <img
-                    src="/src/assets/images/dyno logo.png"
+                    src={dynoLogo}
                     alt="Dyno Logo"
                     className="h-10 w-auto mx-auto"
                 />
@@ -59,6 +66,7 @@ const LoginPage = () => {
                                 value={identifier}
                                 onChange={(e) => setIdentifier(e.target.value)}
                                 disabled={isLoading}
+                                className="text-sm px-2 py-0 border border-zinc-200 rounded-md bg-zinc-50 text-zinc-700 focus-visible:ring-1 focus-visible:ring-violet-400 selection:text-white selection:bg-violet-500"
                             />
                         </div>
 
@@ -71,6 +79,7 @@ const LoginPage = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={isLoading}
+                                className="text-sm px-2 py-0 border border-zinc-200 rounded-md bg-zinc-50 text-zinc-700 focus-visible:ring-1 focus-visible:ring-violet-400 selection:text-white selection:bg-violet-500"
                             />
                         </div>
 

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { PlusIcon } from "lucide-react";
+import React from "react";
 import Sidebar from "@/components/ui/sidebar";
 import DNSSection from "@/components/dns/DNSSection";
 import NavBar from "@/components/ui/nav";

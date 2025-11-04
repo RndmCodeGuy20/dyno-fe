@@ -5,7 +5,7 @@ import Profile from "@/components/ui/profile";
 
 
 const ProfilePage: React.FC = () => {
-    const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(false);
+    const [, setCreateDialogOpen] = React.useState<boolean>(false);
 
     return (
         <div className="flex max-h-screen">

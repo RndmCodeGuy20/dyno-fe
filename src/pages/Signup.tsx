@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
+import dynoLogo from "@/assets/images/dyno logo.png";
+
 const SignupPage = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -13,8 +15,11 @@ const SignupPage = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
 
-    const { signup, isLoading } = useAuth();
+    const { signup, isLoading, isAuthenticated } = useAuth();
     const navigate = useNavigate();
+    if (isAuthenticated) {
+        navigate("/dashboard");
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,7 +64,7 @@ const SignupPage = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-50 relative">
             <div className="logo absolute top-8 left-8 text-center flex gap-2 items-center justify-center ">
                 <img
-                    src="/src/assets/images/dyno logo.png"
+                    src={dynoLogo}
                     alt="Dyno Logo"
                     className="h-10 w-auto mx-auto"
                 />
