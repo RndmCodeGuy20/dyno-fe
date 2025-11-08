@@ -33,7 +33,7 @@ export default function DNSSection(
                         "Your IPv6 entry corresponds to the AAAA record of the actual DNS record.",
                     ]
                 } />
-                <DNSRecords />
+                <DNSRecords createDomainRecord={setCreateDialogOpen} />
                 <CreateDNSRecordDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen} />
             </div>
         </main>

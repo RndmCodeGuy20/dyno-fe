@@ -26,7 +26,7 @@ import type { DnsRecord } from "@/types/dns"
 
 
 
-const DNSRecords: React.FC = () => {
+const DNSRecords: React.FC<{ createDomainRecord: (open: boolean) => void }> = ({ createDomainRecord }) => {
     const { records, isFetchLoading, isFetchError, updateRecord, deleteRecord } = useDnsRecordContext();
 
     const [editing, setEditing] = useState<{
@@ -337,7 +337,7 @@ const DNSRecords: React.FC = () => {
                 </p>
 
                 <div className="flex gap-4 mt-6">
-                    <Button className="bg-violet-500 hover:bg-violet-600 text-white flex items-center gap-2">
+                    <Button className="bg-violet-500 hover:bg-violet-600 text-white flex items-center gap-2" onClick={() => createDomainRecord(true)}>
                         Add Record
                         <span className="inline-flex items-center font-mono ml-1 px-1 py-0.5 rounded-md bg-violet-600 text-xs">
                             <CmdIcon stroke="white" height={14} width={14} /> +N
@@ -350,6 +350,7 @@ const DNSRecords: React.FC = () => {
             </div>
         )
     }
+
     return (
         <div className="p-6 w-full">
             <h2 className="text-lg font-semibold mb-4 text-zinc-600">Records</h2>
