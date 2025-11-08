@@ -2,7 +2,7 @@ import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import { AppError } from '../errors';
 import type { ApiError, ApiErrorResponse } from '../../types/rest';
 
-const API_BASE = 'http://api:5010/api/v1';
+const API_BASE = 'https://api.dyno.rndmcode.in/';
 
 type RequestOptions = AxiosRequestConfig & {
     query?: Record<string, string | number | boolean | undefined>;
@@ -23,6 +23,17 @@ function buildQuery(params?: Record<string, string | number | boolean | undefine
     }
     return `?${query.toString()}`;
 }
+
+export const apiFetchWithAuth = async<T>(url: string, options: RequestOptions = {}): Promise<T> => {
+    const authToken = sessionStorage.getItem('authToken') ?? localStorage.getItem('authToken');
+    return apiFetch<T>(url, {
+        ...options,
+        headers: {
+            ...options.headers,
+            Authorization: `Bearer ${authToken}`,
+        },
+    });
+};
 
 export async function apiFetch<T>(
     path: string,
