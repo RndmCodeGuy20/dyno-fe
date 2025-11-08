@@ -10,6 +10,7 @@ import SignupPage from './pages/Signup.tsx'
 import LoginPage from './pages/Login.tsx'
 import ProfilePage from './pages/Profile.tsx'
 import { DnsRecordProvider } from './context/DNSRecordContext.tsx'
+import NotFound from './pages/NotFound.tsx'
 
 const queryClient = new QueryClient()
 
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')!).render(
               </DnsRecordProvider>
             </ProtectedRoute>
           } />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
