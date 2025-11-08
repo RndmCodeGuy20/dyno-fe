@@ -6,6 +6,9 @@ import Profile from "@/components/ui/profile";
 
 const ProfilePage: React.FC = () => {
     const [, setCreateDialogOpen] = React.useState<boolean>(false);
+    React.useEffect(() => {
+        document.title = "Profile - Dyno";
+    }, []);
 
     return (
         <div className="flex max-h-screen">

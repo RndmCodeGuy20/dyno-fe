@@ -21,6 +21,10 @@ const SignupPage = () => {
         navigate("/dashboard");
     }
 
+    React.useEffect(() => {
+        document.title = "Signup - Dyno";
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");

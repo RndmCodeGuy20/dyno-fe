@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,10 @@ const LoginPage = () => {
     }
 
     const from = location.state?.from?.pathname || "/dashboard";
+
+    useEffect(() => {
+        document.title = "Login - Dyno";
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

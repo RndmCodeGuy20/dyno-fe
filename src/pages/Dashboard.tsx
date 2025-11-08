@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "@/components/ui/sidebar";
 import DNSSection from "@/components/dns/DNSSection";
 import NavBar from "@/components/ui/nav";
@@ -6,6 +6,9 @@ import NavBar from "@/components/ui/nav";
 
 const Dashboard: React.FC = () => {
     const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(false);
+    useEffect(() => {
+        document.title = "Dashboard - Dyno";
+    }, []);
 
     return (
         <div className="flex max-h-screen">
