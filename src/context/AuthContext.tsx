@@ -63,6 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }) => register(email, username, password),
         onSuccess: (data) => {
             setToken(data.token);
+            sessionStorage.setItem(TOKEN_KEY, data.token);
             localStorage.setItem(TOKEN_KEY, data.token);
             queryClient.invalidateQueries({ queryKey: ["user"] });
             toast.success("Account created successfully");
@@ -80,6 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }) => login(username, password),
         onSuccess: (data) => {
             setToken(data.token);
+            sessionStorage.setItem(TOKEN_KEY, data.token);
             localStorage.setItem(TOKEN_KEY, data.token);
             queryClient.invalidateQueries({ queryKey: ["user"] });
             toast.success("Welcome back!");
