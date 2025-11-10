@@ -24,9 +24,9 @@ export async function createRecord(record: { subdomain: string; ipv4: string; ip
             'Content-Type': 'application/json',
         },
         data: JSON.stringify({
-            domain_name: record.subdomain,
-            ip_v4: record.ipv4,
-            ip_v6: record.ipv6,
+            domainName: record.subdomain,
+            IPV4: record.ipv4,
+            IPV6: record.ipv6,
         })
     });
     return response.data;
@@ -39,8 +39,8 @@ export async function updateRecord(id: string, record: Partial<{ ipv4: string; i
             'Content-Type': 'application/json',
         },
         data: JSON.stringify({
-            new_ip_v4: record.ipv4,
-            new_ip_v6: record.ipv6,
+            newIPV4: record.ipv4,
+            newIPV6: record.ipv6,
         })
     });
 }

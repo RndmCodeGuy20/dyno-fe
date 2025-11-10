@@ -27,7 +27,6 @@ export async function register(email: string, username: string, password: string
 
 export async function fetchUserProfile(): Promise<IUser | null> {
     const authToken = sessionStorage.getItem('authToken') ?? localStorage.getItem('authToken');
-    console.log('authToken:', authToken);
 
     const response = await apiFetch<ApiSuccessResponse<IUser | null>>('/user/profile', {
         method: 'GET',
