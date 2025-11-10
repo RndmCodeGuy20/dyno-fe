@@ -253,6 +253,9 @@ For questions and support, please open an issue on GitHub.
 
 ---
 <div align="center">
+
 **Built with ❤️ by the community**
-[Report Bug](https://github.com/rndmcodeguy20/dyno/issues) • [Request Feature](https://github.com/rndmcodeguy20/dyno/issues)
+
+[Report Bug](https://github.com/rndmcodeguy20/dyno/issues/new) • [Request Feature](https://github.com/rndmcodeguy20/dyno/issues)
+
 </div>

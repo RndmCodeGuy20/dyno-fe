@@ -115,7 +115,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🚀 Deployment Successful",
+                    "text": "🚀 Build Successful",
                     "emoji": true
                   }
                 },
@@ -249,7 +249,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "❌ Deployment Failed",
+                    "text": "❌ Build Failed",
                     "emoji": true
                   }
                 },
