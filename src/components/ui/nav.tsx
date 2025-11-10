@@ -1,5 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import dynoLogo from "@/assets/images/dyno logo.png";
+import dynoLogo from "@/assets/images/logo.png";
 import BadgeStatus from "./status_badge";
 
 
