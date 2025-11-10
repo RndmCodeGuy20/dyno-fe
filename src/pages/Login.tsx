@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-import dynoLogo from "@/assets/images/dyno logo.png";
+import dynoLogo from "@/assets/images/logo.png";
 
 const LoginPage = () => {
     const [identifier, setIdentifier] = useState("");
@@ -101,7 +101,7 @@ const LoginPage = () => {
                 <CardFooter className="flex justify-center">
                     <p className="text-sm text-gray-600">
                         Don't have an account?{" "}
-                        <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+                        <Link to="/signup" className="text-violet-600 hover:underline font-medium">
                             Sign up
                         </Link>
                     </p>
