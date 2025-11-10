@@ -5,14 +5,14 @@
 ![Logo](./src/assets/images/logo.png)
 ![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Go Version](https://img.shields.io/badge/react-19.1-4a9dba.svg)
+![React Version](https://img.shields.io/badge/react-19.1-4a9dba.svg)
 [![Build](https://github.com/RndmCodeGuy20/dyno-fe/actions/workflows/ci.yaml/badge.svg)](https://github.com/rndmcodeguy20/dyno-fe/actions)
 
 **A self-hostable, open-source DuckDNS alternative**
 
 Lightweight dynamic DNS service that lets you manage your DNS records without manual overhead.
 
-[Features](#-features) • [Contributing](#-contributing)
+[Features](#-features) • [Contributing](#-contributing) • [Documentation](https://dyno.docs.rndmcode.in)
 
 </div>
 
@@ -29,6 +29,8 @@ PROVIDER_API_KEY=your_cloudflare_key \
 POSTGRES_PASSWORD=secure_password \
 curl -fsSL sh.rndmcode.in/dyno | bash
 ```
+
+> 📖 **Detailed Documentation**: Visit [dyno.docs.rndmcode.in](https://dyno.docs.rndmcode.in) for comprehensive guides, tutorials, and API documentation.
 
 **Environment Variables:**
 
@@ -190,22 +192,6 @@ Contributions are welcome! Please follow these steps:
 4. **Push to the branch**: `git push origin feature/amazing-feature`
 5. **Open a Pull Request**
 
-### Contribution Guidelines
-
-- Follow Go best practices and conventions
-- Write tests for new features
-- Update documentation as needed
-- Keep commits atomic and well-described
-- Ensure CI/CD pipeline passes
-
-### Code Style
-
-This project follows standard Go conventions:
-
-- Use `gofmt` for formatting
-- Run `go vet` for static analysis
-- Follow [Effective Go](https://golang.org/doc/effective_go) guidelines
-
 ---
 
 ## 🐛 Bug Reports & Feature Requests
@@ -236,7 +222,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by [DuckDNS](https://www.duckdns.org/)
 - Built with [Go](https://golang.org/)
 - Uses [Cloudflare Go SDK](https://github.com/cloudflare/cloudflare-go)
-- Powered by [Chi Router](https://github.com/go-chi/chi)
 
 ---
 
@@ -252,6 +237,7 @@ If you find this project helpful, please consider:
 For questions and support, please open an issue on GitHub.
 
 ---
+
 <div align="center">
 
 **Built with ❤️ by the community**
