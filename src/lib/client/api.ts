@@ -2,7 +2,8 @@ import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import { AppError } from '../errors';
 import type { ApiError, ApiErrorResponse } from '../../types/rest';
 
-const API_BASE = 'https://api.dyno.rndmcode.in/';
+export const API_BASE = 'https://api.dyno.rndmcode.in/';
+// export const API_BASE = 'http://localhost:5010/api/v1';
 
 type RequestOptions = AxiosRequestConfig & {
     query?: Record<string, string | number | boolean | undefined>;

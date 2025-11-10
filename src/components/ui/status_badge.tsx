@@ -1,3 +1,4 @@
+import { API_BASE } from "@/lib/client/api";
 import { useEffect, useState } from "react";
 
 
@@ -6,7 +7,7 @@ const BadgeStatus = () => {
     useEffect(() => {
         const fetchHealth = async () => {
             try {
-                const res = await fetch("https://api.dyno.rndmcode.in/status");
+                const res = await fetch(`${API_BASE}/status`);
                 const data = await res.json();
                 setIsOnline(data.status === "ok");
             } catch {
